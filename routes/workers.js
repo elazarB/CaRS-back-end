@@ -26,7 +26,7 @@ router.get("/workerInfo", auth, async (req, res) => {
 })
 
 router.get("/allWorker", authAdmin, async (req, res) => {
-  let limit = Math.min(req.query.limit, 20) || 20;
+  let limit = Math.min(req.query.limit, 100) || 20;
   let page = req.query.page - 1 || 0;
   let sort = req.query.sort || "_id";
   let reverse = req.query.reverse == "yes" ? 1 : -1;
