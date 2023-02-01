@@ -6,7 +6,7 @@ const { auth } = require("../middlewares/auth");
 const router = express.Router();
 
 router.get("/", auth, async (req, res) => {
-  let limit = Math.min(req.query.limit, 100) || 20;
+  let limit = Math.min(req.query.limit, 20) || 20;
   let page = req.query.page - 1 || 0;
   let sort = req.query.sort || "_id";
   let reverse = req.query.reverse == "yes" ? 1 : -1;
@@ -54,6 +54,20 @@ router.post("/", auth, async (req, res) => {
     if (err.code == 11000) {
       return res.status(400).json({ msg: "license number already in system", code: 11000 })
     }
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
+
+router.patch("/:id/:status", auth, async (req, res) => {
+  try {
+    let id = req.params.id;
+    let status = req.params.status;
+    let data = await InteractionsModel.updateOne({ _id: id },{status:status});
+    res.json(data);
+  }
+  catch (err) {
     console.log(err);
     res.status(502).json({ err })
   }
