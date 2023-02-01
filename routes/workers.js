@@ -37,7 +37,7 @@ router.get("/allWorker", authAdmin, async (req, res) => {
 })
 
 // sign up
-router.post("/", authAdmin ,async (req, res) => {
+router.post("/", authAdmin, async (req, res) => {
   let validBody = validateWorker(req.body);
   if (validBody.error) {
     return res.status(400).json(validBody.error.details);
@@ -49,7 +49,7 @@ router.post("/", authAdmin ,async (req, res) => {
     user.password = await bcrypt.hash(user.password, 10);
     await user.save();
     // להסתיר את ההצפנה לצד לקוח
-    user.password = "***"
+    user.password = "******"
     res.json(user);
   }
   catch (err) {
@@ -78,7 +78,7 @@ router.post("/logIn", async (req, res) => {
       return res.status(401).json({ msg: "Password Worng." })
     }
     // לשלוח טוקן
-    let token = createToken(user._id,user.role ,user.user_name)
+    let token = createToken(user._id, user.role, user.user_name)
     // res.json({token:token})
     res.json({ token })
   }
@@ -88,46 +88,39 @@ router.post("/logIn", async (req, res) => {
   }
 })
 
-router.put("/:id/:role", authAdmin, async (req, res) => {
-   // לשאול את עופר אם זה תקין
-   WorkerModel.findById(req.params.id, (err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      user.role = req.params.role;
-      user.save((err, updatedUser) => {
-        if (err) {
-          res.status(500).send(err);
-        } else {
-          res.send(updatedUser);
-        }
-      });
-    }
-  });
+router.put("/:id", auth, async (req, res) => {
+  let validBody = validateWorker(req.body);
+  if (validBody.error) {
+    return res.status(400).json(validBody.error.details);
+  }
+  try {
+    let id = req.params.id;
+    let data= await WorkerModel.updateOne({ _id: id }, req.body);
+    res.json(data);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
 
-  // let validBody = validateWorker(req.body);
-  // console.log(validBody);
-  // if (validBody.error) {
-  //   return res.status(400).json(validBody.error.details);
-  // }
-  // try {
-  //   let id = req.params.id;
-  //   let data;
-  //   data = await WorkerModel.updateOne({ _id: id }, req.body);
-  //   data.role = "admin";
-  //   res.json(data);
-  // }
-  // catch (err) {
-  //   console.log(err);
-  //   res.status(502).json({ err })
-  // }
+router.patch("/:id/:role", authAdmin, async (req, res) => {
+  try {
+    let id = req.params.id;
+    let role = req.params.role;
+    let data = await WorkerModel.updateOne({ _id: id },{role:role});
+    res.json(data);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
 })
 
 router.delete("/:user_name", authAdmin, async (req, res) => {
   try {
     let user_name = req.params.user_name;
-    let data;
-    data = await WorkerModel.deleteOne({ user_name: user_name });
+    let data = await WorkerModel.deleteOne({ user_name: user_name });
     res.json(data);
   }
   catch (err) {

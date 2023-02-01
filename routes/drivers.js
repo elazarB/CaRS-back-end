@@ -25,28 +25,28 @@ const router = express.Router();
 // })
 
 router.get("/", auth, async (req, res) => {
-  let limit = Math.min(req.query.limit,100) || 20;
+  let limit = Math.min(req.query.limit, 100) || 20;
   let page = req.query.page - 1 || 0;
   let sort = req.query.sort || "_id";
   let reverse = req.query.reverse == "yes" ? 1 : -1;
   // cearch 
-  let searchT = req.query.s||"";
+  let searchT = req.query.s || "";
   // search type
-  let searchP = req.query.search ||"name";
+  let searchP = req.query.search || "name";
   let sExp = new RegExp(searchT, "i");
-  let searchDate= req.query.searchDate||"";
-  let searchDateS= req.query.searchDateS||"1-1-1900";
-  let searchDateE= req.query.searchDateE||"1-1-2900";
+  let searchDate = req.query.searchDate || "";
+  let searchDateS = req.query.searchDateS || "1-1-1900";
+  let searchDateE = req.query.searchDateE || "1-1-2900";
   try {
     let data = await DriversModel
-    .find(searchT?{ $or: [{ [searchP]: sExp }] }:{})
-    .find(searchDate?{
-      [searchDate]: {
+      .find(searchDate ? {
+        [searchDate]: {
           $gt: searchDateS,
           $lt: searchDateE
-      }
-  }:{})
-      .limit(limit )
+        }
+      } : {})
+      .find(searchT ? { $or: [{ [searchP]: sExp }] } : {})
+      .limit(limit)
       .skip(page * limit)
       .sort({ [sort]: reverse })
     res.json(data);
