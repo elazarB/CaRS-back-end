@@ -38,6 +38,17 @@ router.get("/", auth, async (req, res) => {
   }
 })
 
+router.get("/single/:id", auth, async (req, res) => {
+  try {
+    let worker = await InteractionsModel.findOne({ _id: req.params.id }, { password: 0 });
+    res.json(worker);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
 router.post("/", auth, async (req, res) => {
   let validBody = validateInteractions(req.body);
   if (validBody.error) {
@@ -94,7 +105,7 @@ router.delete("/:id", auth, async (req, res) => {
   try {
     let id = req.params.id;
     let data;
-    data = await InteractionsModel.deleteOne({ id: id });
+    data = await InteractionsModel.deleteOne({ _id: id });
     res.json(data);
   }
   catch (err) {

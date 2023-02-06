@@ -57,6 +57,17 @@ router.get("/", auth, async (req, res) => {
   }
 })
 
+router.get("/single/:id", auth, async (req, res) => {
+  try {
+    let worker = await DriversModel.findOne({ _id: req.params.id }, { password: 0 });
+    res.json(worker);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
 router.post("/", auth, async (req, res) => {
   let validBody = validateDrivers(req.body);
   if (validBody.error) {
@@ -99,7 +110,7 @@ router.delete("/:id", auth, async (req, res) => {
   try {
     let id = req.params.id;
     let data;
-    data = await DriversModel.deleteOne({ id: id });
+    data = await DriversModel.deleteOne({ _id: id });
     res.json(data);
   }
   catch (err) {

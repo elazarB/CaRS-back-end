@@ -43,13 +43,10 @@ router.get("/", auth, async (req, res) => {
 
 
 
-router.get("search", async (req, res) => {
-  let s = req.query.s;
-  let sExp = new RegExp(s, "i");
+router.get("/single/:id", auth, async (req, res) => {
   try {
-    let data = await CarsModel.find({ $or: [{ manufacturer: sExp }, { model: sExp }] })
-      .limit(20)
-    res.json(data);
+    let worker = await CarsModel.findOne({ _id: req.params.id }, { password: 0 });
+    res.json(worker);
   }
   catch (err) {
     console.log(err);
@@ -107,7 +104,7 @@ router.delete("/:id", auth, async (req, res) => {
   try {
     let id = req.params.id;
     let data;
-    data = await CarsModel.deleteOne({ id: id });
+    data = await CarsModel.deleteOne({ _id: id });
     res.json(data);
   }
   catch (err) {

@@ -25,6 +25,17 @@ router.get("/workerInfo", auth, async (req, res) => {
   }
 })
 
+router.get("/single/:id", auth, async (req, res) => {
+  try {
+    let worker = await WorkerModel.findOne({ _id: req.params.id }, { password: 0 });
+    res.json(worker);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
 router.get("/allWorker", authAdmin, async (req, res) => {
   let limit = Math.min(req.query.limit, 100) || 20;
   let page = req.query.page - 1 || 0;
@@ -117,7 +128,7 @@ router.put("/:id", auth, async (req, res) => {
   }
   try {
     let id = req.params.id;
-    let data= await WorkerModel.updateOne({ _id: id }, req.body);
+    let data= await WorkerModel.updateOne({ _id: req.tokenData._id }, req.body);
     res.json(data);
   }
   catch (err) {
@@ -126,10 +137,17 @@ router.put("/:id", auth, async (req, res) => {
   }
 })
 
-router.patch("/:id/:role", authAdmin, async (req, res) => {
+router.patch("/:id", authAdmin, async (req, res) => {
   try {
-    let id = req.params.id;
-    let role = req.params.role;
+    let role ;
+    
+    let _id = req.params.id;
+    // let role = req.params.role;
+    const user = await WorkerModel.findOne({_id})
+    
+    if(user.role == "user"){
+      role = "admin"
+    }
     let data = await WorkerModel.updateOne({ _id: id },{role:role});
     res.json(data);
   }
@@ -139,10 +157,10 @@ router.patch("/:id/:role", authAdmin, async (req, res) => {
   }
 })
 
-router.delete("/:user_name", authAdmin, async (req, res) => {
+router.delete("/:id", authAdmin, async (req, res) => {
   try {
-    let user_name = req.params.user_name;
-    let data = await WorkerModel.deleteOne({ user_name: user_name });
+    let id = req.params.id;
+    let data = await WorkerModel.deleteOne({ _id: id });
     res.json(data);
   }
   catch (err) {
