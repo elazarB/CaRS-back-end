@@ -23,7 +23,7 @@ exports.validateCustomers = (_reqBody) => {
     city: Joi.string().min(2).max(150).required(),
     address: Joi.string().min(2).max(150).required(),
     email: Joi.string().min(2).max(150).email().required(),
-    drivers: Joi.array().min(2).max(999).required(),
+    drivers: Joi.array().min(1).max(100).required(),
   })
   return joiSchema.validate(_reqBody)
 }
