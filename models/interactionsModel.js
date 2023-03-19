@@ -16,7 +16,7 @@ let interactionsSchema = new mongoose.Schema({
 exports.InteractionsModel = mongoose.model("interactions", interactionsSchema)
 
 exports.validateInteractions = (_reqBody) => {
-  let joiSchema = Joi.object({
+  return Joi.object({
     tenant_name: Joi.string().min(2).max(150).required(),
     driver_name: Joi.string().min(2).max(150).required(),
     manufacturer_model: Joi.string().min(2).max(150).required(),
@@ -27,6 +27,5 @@ exports.validateInteractions = (_reqBody) => {
     return_time: Joi.string().min(2).max(150).required(),
     done_by: Joi.string().min(2).max(150).required(),
     status: Joi.string().min(2).max(150).required(),
-})
-return joiSchema.validate(_reqBody)
+}).validate();
 }

@@ -21,8 +21,8 @@ exports.WorkerModel = mongoose.model("workers",workerSchema);
 
 // פונקציה שמייצרת טוקן שמכיל את האיי די של המשתמש
 // תקף ל 10 שעות
-exports.createToken = (worker_id,role,user_name) => {
-  let token = jwt.sign({_id:worker_id,role,user_name},"carsSecret",{expiresIn:"600mins"})
+exports.createToken = (worker_id,role) => {
+  let token = jwt.sign({_id:worker_id,role},"carsSecret",{expiresIn:"600mins"})
   return token;
 }
 

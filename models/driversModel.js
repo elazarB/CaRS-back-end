@@ -27,7 +27,7 @@ exports.validateDrivers = (_reqBody) => {
     data_of_birth: Joi.date().min("1-1-1900").max("1-1-2100").required(),
     license_issuance_date: Joi.date().min("1-1-1900").max("1-1-2100").required(),
     exp_license: Joi.date().min("1-1-1900").max("1-1-2100").required(),
-    img_driving_license: Joi.string().min(2).max(300).required(),
+    img_driving_license: Joi.string().min(2).max(300),
     img_id: Joi.string().min(2).max(150)
   })
   return joiSchema.validate(_reqBody)
