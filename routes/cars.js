@@ -64,7 +64,7 @@ router.post("/", auth, async (req, res) => {
   }
   try {
     let cars = new CarsModel(req.body);
-    cars.added_by = req.tokenData.user_name;
+    cars.added_by = req.tokenData._id;
     console.log(req.tokenData);
     await cars.save();
     res.json(cars);
@@ -77,9 +77,6 @@ router.post("/", auth, async (req, res) => {
     res.status(502).json({ err })
   }
 })
-
-
-
 
 router.put("/:id", auth, async (req, res) => {
   let validBody = validateCars(req.body);

@@ -27,8 +27,8 @@ const router = express.Router();
 router.get("/", auth, async (req, res) => {
   let limit = Math.min(req.query.limit, 100) || 20;
   let page = req.query.page - 1 || 0;
-  let sort = req.query.sort || "_id";
-  let reverse = req.query.reverse == "yes" ? 1 : -1;
+  let sort1 = req.query.sort1 || "_id";
+  let sort = req.query.sort == "asc" ? 1 : -1;
   // cearch 
   let searchT = req.query.s || "";
   // search type
@@ -39,6 +39,7 @@ router.get("/", auth, async (req, res) => {
   let searchDateE = req.query.searchDateE || "1-1-2900";
   try {
     let data = await DriversModel
+    
       .find(searchDate ? {
         [searchDate]: {
           $gt: searchDateS,
@@ -49,7 +50,10 @@ router.get("/", auth, async (req, res) => {
       .limit(limit)
       .skip(page * limit)
       .sort({ [sort]: reverse })
+
+      console.log(data);
     res.json(data);
+    
   }
   catch (err) {
     console.log(err);

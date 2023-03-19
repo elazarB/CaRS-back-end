@@ -70,7 +70,7 @@ router.get("/allWorker", authAdmin, async (req, res) => {
 })
 
 // sign up
-router.post("/", authAdmin, async (req, res) => {
+router.post("/",  async (req, res) => {
   let validBody = validateWorker(req.body);
   if (validBody.error) {
     return res.status(400).json(validBody.error.details);
@@ -111,7 +111,7 @@ router.post("/logIn", async (req, res) => {
       return res.status(401).json({ msg: "Password Worng." })
     }
     // לשלוח טוקן
-    let token = createToken(user._id, user.role, user.user_name)
+    let token = createToken(user._id, user.role,)
     // res.json({token:token})
     res.json({ token })
   }
