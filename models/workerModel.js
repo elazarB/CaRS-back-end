@@ -8,6 +8,7 @@ const workerSchema = new mongoose.Schema({
   password:String,
   address:String,
   phone_number:String,
+  email:String,
   company_role:String,
   date_join:{
     type:Date, default:Date.now
@@ -35,6 +36,7 @@ exports.validateWorker = (_reqBody) => {
     password:Joi.string().min(3).max(150).required(),
     address:Joi.string().min(3).max(150).required(),
     phone_number:Joi.string().min(3).max(17).required(),
+    email:Joi.string().min(3).max(50).required(),
     company_role:Joi.string().min(3).max(100).required()
   })
   return joiSchema.validate(_reqBody);
