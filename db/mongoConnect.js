@@ -7,7 +7,7 @@ async function main() {
   mongoose.set('strictQuery', false);
   // וזה לווינדוס 11
   await mongoose.connect('mongodb+srv://CaRS:cars1234@cluster0.ibm2hzi.mongodb.net/test');
-  console.log("mongo connect cars local");
+  console.log("mongo connect cars atlas");
   
   // use `await mongoose.connect('mongodb://user:password@localhost:27017/test');` if your database has auth enabled
 }
