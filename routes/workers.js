@@ -103,12 +103,12 @@ router.post("/logIn", async (req, res) => {
     // לבדוק אם בכלל יש רשומה עם המייל שנשלח
     let user = await WorkerModel.findOne({ user_name: req.body.user_name })
     if (!user) {
-      return res.status(401).json({ msg: "User name Worng." })
+      return res.json({ msg: "err" })
     }
     // לבדוק אם הרשומה שנמצאה הסיסמא המוצפנות בתוכה מתאימה 
     let validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) {
-      return res.status(401).json({ msg: "Password Worng." })
+      return res.json({ msg: "err" })
     }
     // לשלוח טוקן
     let token = createToken(user._id, user.role,)
