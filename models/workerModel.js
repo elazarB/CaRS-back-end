@@ -14,7 +14,7 @@ const workerSchema = new mongoose.Schema({
     type:Date, default:Date.now
   },
   role:{
-    type:String, default:"user"
+    type:String, default:"pending"
   }
 })
 
@@ -37,7 +37,7 @@ exports.validateWorker = (_reqBody) => {
     address:Joi.string().min(3).max(150).required(),
     phone_number:Joi.string().min(3).max(17).required(),
     email:Joi.string().min(3).max(50).required(),
-    company_role:Joi.string().min(3).max(100).required()
+    company_role:Joi.string().min(3).max(100).allow(null,"")
   })
   return joiSchema.validate(_reqBody);
 }
