@@ -73,7 +73,7 @@ router.get("/allWorker", authAdmin, async (req, res) => {
 router.post("/",  async (req, res) => {
   let validBody = validateWorker(req.body);
   if (validBody.error) {
-    return res.status(400).json(validBody.error.details);
+    return res.status(400).json({msg:"not vaidate"},validBody.error.details);
   }
   try {
     let user = new WorkerModel(req.body);
@@ -97,7 +97,7 @@ router.post("/",  async (req, res) => {
 router.post("/logIn", async (req, res) => {
   let validBody = validateLogin(req.body);
   if (validBody.error) {
-    return res.status(400).json(validBody.error.details);
+    return res.json(validBody.error.details);
   }
   try {
     // לבדוק אם בכלל יש רשומה עם המייל שנשלח
