@@ -110,7 +110,7 @@ router.post("/logIn", async (req, res) => {
     if (!validPassword) {
       return res.json({ msg: "err" })
     }
-    if(req.body.role == "pending" || req.body.role == "dormant"){
+    if(user.role == "pending" || user.role == "dormant"){
       return res.json({ msg: "No access permission contact the administrator" })
     }
 
