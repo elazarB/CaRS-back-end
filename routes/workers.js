@@ -110,9 +110,13 @@ router.post("/logIn", async (req, res) => {
     if (!validPassword) {
       return res.json({ msg: "err" })
     }
+    if(req.body.role == "pending" || req.body.role == "dormant"){
+      return res.json({ msg: "No access permission contact the administrator" })
+    }
+
     // לשלוח טוקן
     let token = createToken(user._id, user.role,)
-    // res.json({token:token})
+    
     res.json({ token })
   }
   catch (err) {
