@@ -103,15 +103,15 @@ router.post("/logIn", async (req, res) => {
     // לבדוק אם בכלל יש רשומה עם המייל שנשלח
     let user = await WorkerModel.findOne({ user_name: req.body.user_name })
     if (!user) {
-      return res.json({ msg: "err" })
+      return res.json({ msg: "שם משתמש או סיסמה אינם נכונים" })
     }
     // לבדוק אם הרשומה שנמצאה הסיסמא המוצפנות בתוכה מתאימה 
     let validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) {
-      return res.json({ msg: "err" })
+      return res.json({ msg: "שם משתמש או סיסמה אינם נכונים" })
     }
     if(user.role == "pending" || user.role == "dormant"){
-      return res.json({ msg: "No access permission contact the administrator" })
+      return res.json({ msg: "אין הרשאת גישה פנה למנהל המערכת" })
     }
 
     // לשלוח טוקן
