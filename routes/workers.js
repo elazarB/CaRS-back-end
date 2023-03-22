@@ -73,7 +73,7 @@ router.get("/allWorker", authAdmin, async (req, res) => {
 router.post("/",  async (req, res) => {
   let validBody = validateWorker(req.body);
   if (validBody.error) {
-    return res.status(400).json({msg:"not vaidate"},validBody.error.details);
+    return res.status(400).json(validBody.error.details);
   }
   try {
     let user = new WorkerModel(req.body);
