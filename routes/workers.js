@@ -153,7 +153,7 @@ router.patch("/:id", authAdmin, async (req, res) => {
     //   role = "admin"
     // }
     
-    let data = await WorkerModel.updateOne({ _id: id },{role:role});
+    let data = await WorkerModel.updateOne({ _id: _id },{role:role});
     res.json(data);
   }
   catch (err) {
