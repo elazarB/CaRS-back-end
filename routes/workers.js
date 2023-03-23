@@ -148,10 +148,11 @@ router.patch("/:id", authAdmin, async (req, res) => {
     let _id = req.params.id;
     // let role = req.params.role;
     const user = await WorkerModel.findOne({_id})
+    role = req.body.role  
+    // if(user.role == "user"){
+    //   role = "admin"
+    // }
     
-    if(user.role == "user"){
-      role = "admin"
-    }
     let data = await WorkerModel.updateOne({ _id: id },{role:role});
     res.json(data);
   }
