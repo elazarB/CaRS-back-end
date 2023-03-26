@@ -31,7 +31,7 @@ router.get("/", auth, async (req, res) => {
        searchT != "" ?
        searchP != ""? 
        { $or: [{ [searchP]: sExp }] } 
-       : {$or: [{license_number: sExp },{manufacturer_en: sExp },{manufacturer_hb: sExp },{model_en: sExp },{model_hb: sExp },{year: sExp },{color: sExp },{km: sExp },{status: sExp },{branch: sExp },{fuel_type: sExp },{class: sExp }]} 
+       : {$or: [{license_number: sExp },{manufacturer_en: sExp },{manufacturer_hb: sExp },{model_en: sExp },{model_hb: sExp },{color: sExp },{status: sExp },{branch: sExp },{fuel_type: sExp },{class: sExp }]} 
        : {})
       .limit(limit)
       .skip(page * limit)
