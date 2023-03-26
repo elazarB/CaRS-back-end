@@ -10,10 +10,10 @@ router.get("/", auth, async (req, res) => {
   let page = req.query.page - 1 || 0;
   let sort = req.query.sort || "_id";
   let reverse = req.query.reverse == "yes" ? 1 : -1;
-  // cearch 
+  // search text 
   let searchT = req.query.s || "";
   // search type
-  let searchP = req.query.search || "manufacturer_hb";
+  let searchP = req.query.search || "";
   let sExp = new RegExp(searchT, "i");
   let searchDate = req.query.searchDate || "";
   let searchDateS = req.query.searchDateS || "1-1-1900";
@@ -27,7 +27,12 @@ router.get("/", auth, async (req, res) => {
           $lt: searchDateE
         }
       } : {})
-      .find(searchT ? { $or: [{ [searchP]: sExp }] } : {})
+      .find(
+       searchT != "" ?
+       searchP != ""? 
+       { $or: [{ [searchP]: sExp }] } 
+       : {$or: [{license_number: sExp },{manufacturer_en: sExp },{manufacturer_hb: sExp },{model_en: sExp },{model_hb: sExp },{year: sExp },{color: sExp },{km: sExp },{status: sExp },{branch: sExp },{fuel_type: sExp },{class: sExp }]} 
+       : {})
       .limit(limit)
       .skip(page * limit)
       .sort({ [sort]: reverse })
