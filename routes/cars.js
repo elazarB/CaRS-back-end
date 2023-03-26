@@ -13,7 +13,7 @@ router.get("/", auth, async (req, res) => {
   // cearch 
   let searchT = req.query.s || "";
   // search type
-  let searchP = req.query.search || "name";
+  let searchP = req.query.search || "manufacturer_hb";
   let sExp = new RegExp(searchT, "i");
   let searchDate = req.query.searchDate || "";
   let searchDateS = req.query.searchDateS || "1-1-1900";
