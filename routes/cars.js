@@ -21,7 +21,7 @@ router.get("/", auth, async (req, res) => {
 
   try {
     let data = await CarsModel
-      .find(searchDate ? {
+      .find(searchDate != "" ? {
         [searchDate]: {
           $gt: searchDateS,
           $lt: searchDateE
