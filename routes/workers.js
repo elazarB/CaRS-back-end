@@ -41,23 +41,29 @@ router.get("/allWorker", authAdmin, async (req, res) => {
   let page = req.query.page - 1 || 0;
   let sort = req.query.sort || "_id";
   let reverse = req.query.reverse == "yes" ? 1 : -1;
-  // cearch 
+  // search text 
   let searchT = req.query.s || "";
   // search type
-  let searchP = req.query.search || "name";
+  let searchP = req.query.search || "";
   let sExp = new RegExp(searchT, "i");
   let searchDate = req.query.searchDate || "";
   let searchDateS = req.query.searchDateS || "1-1-1900";
   let searchDateE = req.query.searchDateE || "1-1-2900";
+
   try {
     let data = await WorkerModel
-      .find(searchDate ? {
+      .find(searchDate != "" ? {
         [searchDate]: {
           $gt: searchDateS,
           $lt: searchDateE
         }
       } : {})
-      .find(searchT ? { $or: [{ [searchP]: sExp }] } : {},{password:0})
+      .find(
+        searchT != "" ?
+          searchP != "" ?
+            { $or: [{ [searchP]: sExp }] }
+            : { $or: [  { address: sExp }] }
+          : {})
       .limit(limit)
       .skip(page * limit)
       .sort({ [sort]: reverse })
@@ -132,7 +138,7 @@ router.put("/:id", auth, async (req, res) => {
   }
   try {
     let id = req.params.id;
-    let data= await WorkerModel.updateOne({ _id: req.tokenData._id }, req.body);
+    let data= await WorkerModel.updateOne(tokenData.role == 'admin'?{_id:id} : { _id: req.tokenData._id }, req.body);
     res.json(data);
   }
   catch (err) {
