@@ -138,7 +138,9 @@ router.put("/:id", auth, async (req, res) => {
   }
   try {
     let id = req.params.id;
-    let data= await WorkerModel.updateOne(tokenData.role == 'admin'?{_id:id} : { _id: req.tokenData._id }, req.body);
+    // req.body.role = req.params.role;
+    // const filterDb = tokenData.role == 'admin'?{_id:id} : { _id: req.tokenData._id }
+    let data= await WorkerModel.updateOne(req.tokenData.role == 'admin'?{_id:id} : { _id: req.tokenData._id }, req.body);
     res.json(data);
   }
   catch (err) {
