@@ -151,15 +151,8 @@ router.put("/:id", auth, async (req, res) => {
 
 router.patch("/:id", authAdmin, async (req, res) => {
   try {
-    
-    
     let _id = req.params.id;
-    // let role = req.params.role;
-    const user = await WorkerModel.findOne({_id})
     let role = req.body.role  
-    // if(user.role == "user"){
-    //   role = "admin"
-    // }
     
     let data = await WorkerModel.updateOne({ _id: _id },{role:role});
     res.json(data);
