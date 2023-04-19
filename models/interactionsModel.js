@@ -12,6 +12,8 @@ let interactionsSchema = new mongoose.Schema({
   return_time: String,
   done_by: String,
   status: String,
+  images: Array,
+  files: Array,
 })
 exports.InteractionsModel = mongoose.model("interactions", interactionsSchema)
 
@@ -27,5 +29,7 @@ exports.validateInteractions = (_reqBody) => {
     return_time: Joi.string().min(2).max(150).required(),
     done_by: Joi.string().min(2).max(150).required(),
     status: Joi.string().min(2).max(150).required(),
+    images: Joi.array().min(0).max(100).allow(null,""),
+    files: Joi.array().min(0).max(100).allow(null,""),
 }).validate();
 }

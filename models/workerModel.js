@@ -46,21 +46,6 @@ exports.validateWorker = (_reqBody) => {
   return joiSchema.validate(_reqBody);
 }
 
-// exports.validateWorkerUpdate = (_reqBody) => {
-//   let joiSchema = Joi.object({
-//     name:Joi.string().min(2).max(150).required(),
-//     user_name:Joi.string().min(2).max(150).required(),
-//     password:Joi.string().min(3).max(150).required(),
-//     address:Joi.string().min(3).max(150).required(),
-//     phone_number:Joi.string().min(3).max(17).required(),
-//     email:Joi.string().min(3).max(50).required(),
-//     company_role:Joi.string().min(3).max(100).allow(null,""),
-//     date_join:Joi.date().min(1).max(100).required(),
-//     role:Joi.string().min(1).max(100).required()
-//   })
-//   return joiSchema.validate(_reqBody);
-// }
-
 exports.validateLogin = (_reqBody) => {
   let joiSchema = Joi.object({
     user_name:Joi.string().min(2).max(150).required(),
