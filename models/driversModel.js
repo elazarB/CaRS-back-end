@@ -13,8 +13,8 @@ let driversSchema = new mongoose.Schema({
   Date_added:{
     type:Date,default:Date.now
   },
-  img_driving_license: String,
-  img_id: String,
+  images: Array,
+  files: Array,
 })
 exports.DriversModel = mongoose.model("drivers", driversSchema)
 
@@ -27,8 +27,8 @@ exports.validateDrivers = (_reqBody) => {
     data_of_birth: Joi.date().min("1-1-1900").max("1-1-2100").required(),
     license_issuance_date: Joi.date().min("1-1-1900").max("1-1-2100").required(),
     exp_license: Joi.date().min("1-1-1900").max("1-1-2100").required(),
-    img_driving_license: Joi.string().min(2).max(300),
-    img_id: Joi.string().min(2).max(150)
+    images: Joi.array().min(1).max(100).allow(null,""),
+    files: Joi.array().min(1).max(100).allow(null,""),
   })
   return joiSchema.validate(_reqBody)
 }

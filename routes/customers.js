@@ -71,14 +71,14 @@ router.post("/", auth, async (req, res) => {
 })
 
 router.put("/:id", auth, async (req, res) => {
-  let validBody = validateSection(req.body);
+  let validBody = validateCustomers(req.body);
   if (validBody.error) {
     return res.status(400).json(validBody.error.details);
   }
   try {
     let id = req.params.id;
     let data;
-    data = await SectionModel.updateOne({ _id: id }, req.body);
+    data = await CustomersModel.updateOne({ _id: id }, req.body);
     res.json(data);
   }
   catch (err) {
@@ -91,7 +91,7 @@ router.delete("/:id", auth, async (req, res) => {
   try {
     let id = req.params.id;
     let data;
-    data = await WorkerModel.deleteOne({ _id: id });
+    data = await CustomersModel.deleteOne({ _id: id });
     res.json(data);
 
   }
