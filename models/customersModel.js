@@ -26,8 +26,8 @@ exports.validateCustomers = (_reqBody) => {
     address: Joi.string().min(2).max(150).required(),
     email: Joi.string().min(2).max(150).email().required(),
     drivers: Joi.array().min(1).max(100).allow(null,""),
-    images: Joi.array().min(1).max(100).allow(null,""),
-    files: Joi.array().min(1).max(100).allow(null,""),
+    images: Joi.array().min(0).max(100).allow(null,""),
+    files: Joi.array().min(0).max(100).allow(null,""),
   })
   return joiSchema.validate(_reqBody)
 }
