@@ -40,8 +40,8 @@ exports.validateWorker = (_reqBody) => {
     phone_number:Joi.string().min(3).max(17).required(),
     email:Joi.string().min(3).max(50).required(),
     company_role:Joi.string().min(3).max(100).allow(null,""),
-    images: Joi.array().min(1).max(100).allow(null,""),
-    files: Joi.array().min(1).max(100).allow(null,""),
+    images: Joi.array().min(0).max(100).allow(null,""),
+    files: Joi.array().min(0).max(100).allow(null,""),
   })
   return joiSchema.validate(_reqBody);
 }
