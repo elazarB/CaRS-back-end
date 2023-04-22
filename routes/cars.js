@@ -60,7 +60,8 @@ router.get("/single/:id", auth, async (req, res) => {
 })
 
 router.get("/count", async(req,res) => {
-  let perPage = req.body.limit;
+  let perPage = req.query.limit;
+  console.log(perPage);
   try{
     let data = await CarsModel.countDocuments(perPage);
     res.json({count:data,pages:Math.ceil(data/perPage)})
