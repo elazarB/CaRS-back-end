@@ -36,37 +36,47 @@ router.get("/single/:id", auth, async (req, res) => {
   }
 })
 
-router.get("/allWorker", authAdmin, async (req, res) => {
-  let limit = Math.min(req.query.limit, 100) || 20;
-  let page = req.query.page - 1 || 0;
+router.get("/allWorker", auth, async (req, res) => {
+  let limit = Math.min(req.query.limit || 20, 100);
+  let page = (req.query.page || 1) - 1;
   let sort = req.query.sort || "_id";
-  let reverse = req.query.reverse == "yes" ? 1 : -1;
-  // search text 
+  let reverse = req.query.reverse === "yes" ? 1 : -1;
   let searchT = req.query.s || "";
-  // search type
   let searchP = req.query.search || "";
   let sExp = new RegExp(searchT, "i");
   let searchDate = req.query.searchDate || "";
-  let searchDateS = req.query.searchDateS || "1-1-1900";
-  let searchDateE = req.query.searchDateE || "1-1-2900";
+  let searchDateS = new Date(req.query.searchDateS || "1900-01-01");
+  let searchDateE = new Date(req.query.searchDateE || "2900-01-01");
 
   try {
-    let data = await WorkerModel
-      .find(searchDate != "" ? {
-        [searchDate]: {
-          $gt: searchDateS,
-          $lt: searchDateE
-        }
-      } : {})
-      .find(
-        searchT != "" ?
-          searchP != "" ?
-            { $or: [{ [searchP]: sExp }] }
-            : { $or: [  { address: sExp }] }
-          : {})
+    let query = {};
+    if (searchDate !== "") {
+      query[searchDate] = {
+        $gt: searchDateS,
+        $lt: searchDateE,
+      };
+    }
+    if (searchT !== "") {
+      if (searchP !== "") {
+          query["$or"] = [{ [searchP]: sExp }];
+      } else {
+        let num = Number(searchT);
+        query["$or"] = [
+          {name : sExp },
+          { user_name: sExp },
+          { address: sExp },
+          { phone_number: sExp },
+          { email: sExp },
+          { company_role: sExp },
+          { role: sExp },
+        ];
+
+      }
+    }
+    let data = await WorkerModel.find(query)
       .limit(limit)
       .skip(page * limit)
-      .sort({ [sort]: reverse })
+      .sort({ [sort]: reverse });
     res.json(data);
   }
   catch (err) {
@@ -76,7 +86,7 @@ router.get("/allWorker", authAdmin, async (req, res) => {
 })
 
 // sign up
-router.post("/",  async (req, res) => {
+router.post("/", async (req, res) => {
   let validBody = validateWorker(req.body);
   if (validBody.error) {
     return res.status(400).json(validBody.error.details);
@@ -116,13 +126,13 @@ router.post("/logIn", async (req, res) => {
     if (!validPassword) {
       return res.json({ msg: "Information problem" })
     }
-    if(user.role == "pending" || user.role == "dormant"){
+    if (user.role == "pending" || user.role == "dormant") {
       return res.json({ msg: "Exists and without permission" })
     }
 
     // לשלוח טוקן
     let token = createToken(user._id, user.role,)
-    
+
     res.json({ token })
   }
   catch (err) {
@@ -140,7 +150,7 @@ router.put("/:id", auth, async (req, res) => {
     let id = req.params.id;
     // req.body.role = req.params.role;
     // const filterDb = tokenData.role == 'admin'?{_id:id} : { _id: req.tokenData._id }
-    let data= await WorkerModel.updateOne(req.tokenData.role == 'admin'?{_id:id} : { _id: req.tokenData._id }, req.body);
+    let data = await WorkerModel.updateOne(req.tokenData.role == 'admin' ? { _id: id } : { _id: req.tokenData._id }, req.body);
     res.json(data);
   }
   catch (err) {
@@ -152,9 +162,9 @@ router.put("/:id", auth, async (req, res) => {
 router.patch("/:id", authAdmin, async (req, res) => {
   try {
     let _id = req.params.id;
-    let role = req.body.role  
-    
-    let data = await WorkerModel.updateOne({ _id: _id },{role:role});
+    let role = req.body.role
+
+    let data = await WorkerModel.updateOne({ _id: _id }, { role: role });
     res.json(data);
   }
   catch (err) {

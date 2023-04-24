@@ -1,44 +1,113 @@
 const express = require("express");
 const { CarsModel, validateCars } = require("../models/carsModel");
 const { auth } = require("../middlewares/auth");
+const { number } = require("joi");
 
 
 const router = express.Router();
 
+// router.get("/", auth, async (req, res) => {
+// let limit = Math.min(req.query.limit, 100) || 20;
+// let page = req.query.page - 1 || 0;
+// let sort = req.query.sort || "_id";
+// let reverse = req.query.reverse == "yes" ? 1 : -1;
+// // search text 
+// let searchT = req.query.s || "";
+// // search type
+// let searchP = req.query.search || "";
+
+// let sExp = new RegExp(searchT, "i");
+// let searchDate = req.query.searchDate || "";
+// let searchDateS = req.query.searchDateS || "1-1-1900";
+// let searchDateE = req.query.searchDateE || "1-1-2900";
+
+// try {
+//   let data = await CarsModel
+//     .find(searchDate != "" ? {
+//       [searchDate]: {
+//         $gt: searchDateS,
+//         $lt: searchDateE
+//       }
+//     } : {})
+//     .find(
+//       searchT != "" ?
+//         searchP != "" ?
+//           { $or: [{ [searchP]: sExp }] }
+//           : {
+//             $or: [
+//               { license_number: sExp },
+//               { year: { $eq: Number(sExp) } },
+//               { km: { $eq: Number(sExp) } },
+//               { manufacturer_en: sExp },
+//               { manufacturer_hb: sExp },
+//               { model_en: sExp },
+//               { model_hb: sExp },
+//               { color: sExp },
+//               { status: sExp },
+//               { branch: sExp },
+//               { fuel_type: sExp },
+//               { class: sExp }]
+//           }
+//         : {})
+//     .limit(limit)
+//     .skip(page * limit)
+//     .sort({ [sort]: reverse })
+//   res.json(data);
+// }
+
 router.get("/", auth, async (req, res) => {
-  let limit = Math.min(req.query.limit, 100) || 20;
-  let page = req.query.page - 1 || 0;
+  let limit = Math.min(req.query.limit || 20, 100);
+  let page = (req.query.page || 1) - 1;
   let sort = req.query.sort || "_id";
-  let reverse = req.query.reverse == "yes" ? 1 : -1;
-  // search text 
+  let reverse = req.query.reverse === "yes" ? 1 : -1;
   let searchT = req.query.s || "";
-  // search type
   let searchP = req.query.search || "";
   let sExp = new RegExp(searchT, "i");
   let searchDate = req.query.searchDate || "";
-  let searchDateS = req.query.searchDateS || "1-1-1900";
-  let searchDateE = req.query.searchDateE || "1-1-2900";
+  let searchDateS = new Date(req.query.searchDateS || "1900-01-01");
+  let searchDateE = new Date(req.query.searchDateE || "2900-01-01");
 
   try {
-    let data = await CarsModel
-      .find(searchDate != "" ? {
-        [searchDate]: {
-          $gt: searchDateS,
-          $lt: searchDateE
+    let query = {};
+    if (searchDate !== "") {
+      query[searchDate] = {
+        $gt: searchDateS,
+        $lt: searchDateE,
+      };
+    }
+    if (searchT !== "") {
+      if (searchP !== "") {
+        if (searchP == "km" || searchP == "year" || searchP == "deductible") {
+          Number(searchT)
+          query["$or"] = [{ [searchP]: { $eq: searchT } }];
+        } else {
+          query["$or"] = [{ [searchP]: sExp }];
         }
-      } : {})
-      .find(
-        searchT != "" ?
-          searchP != "" ?
-            { $or: [{ [searchP]: sExp }] }
-            : { $or: [{ license_number: sExp }, { manufacturer_en: sExp }, { manufacturer_hb: sExp }, { model_en: sExp }, { model_hb: sExp }, { color: sExp }, { status: sExp }, { branch: sExp }, { fuel_type: sExp }, { class: sExp }] }
-          : {})
+      } else {
+        let num = Number(searchT);
+        query["$or"] = [
+          { license_number: sExp },
+          { manufacturer_en: sExp },
+          { manufacturer_hb: sExp },
+          { model_en: sExp },
+          { model_hb: sExp },
+          { color: sExp },
+          { status: sExp },
+          { branch: sExp },
+          { fuel_type: sExp },
+          { class: sExp },
+          { year: { $eq: num } },
+          { km: { $eq: num } },
+        ];
+
+      }
+    }
+    let data = await CarsModel.find(query)
       .limit(limit)
       .skip(page * limit)
-      .sort({ [sort]: reverse })
+      .sort({ [sort]: reverse });
     res.json(data);
   }
-
   catch (err) {
     console.log(err);
     res.status(502).json({ err })
@@ -59,16 +128,16 @@ router.get("/single/:id", auth, async (req, res) => {
   }
 })
 
-router.get("/count", async(req,res) => {
+router.get("/count", async (req, res) => {
   let perPage = req.query.limit;
   console.log(perPage);
-  try{
+  try {
     let data = await CarsModel.countDocuments(perPage);
-    res.json({count:data,pages:Math.ceil(data/perPage)})
+    res.json({ count: data, pages: Math.ceil(data / perPage) })
   }
-  catch(err){
+  catch (err) {
     console.log(err);
-    res.status(502).json({err})
+    res.status(502).json({ err })
   }
 })
 
