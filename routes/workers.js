@@ -85,6 +85,19 @@ router.get("/allWorker", auth, async (req, res) => {
   }
 })
 
+router.get("/allWorker/count", async (req, res) => {
+  let perPage = req.query.limit;
+  
+  try {
+    let data = await WorkerModel.countDocuments(perPage);
+    res.json({ count: data, pages: Math.ceil(data / perPage) })
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
 // sign up
 router.post("/", async (req, res) => {
   let validBody = validateWorker(req.body);
