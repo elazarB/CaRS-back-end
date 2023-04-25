@@ -84,7 +84,7 @@ router.get("/", auth, async (req, res) => {
           query["$or"] = [{ [searchP]: sExp }];
         }
       } else {
-        let num = Number(searchT);
+        let num = Number(searchT) != NaN?Number(searchT):"";
         query["$or"] = [
           { license_number: sExp },
           { manufacturer_en: sExp },
@@ -97,7 +97,9 @@ router.get("/", auth, async (req, res) => {
           { fuel_type: sExp },
           { class: sExp },
           { year: { $eq: num } },
-          { km: { $eq: num } },
+          { km: { $eq: num } }
+
+
         ];
 
       }
