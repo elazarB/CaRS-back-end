@@ -27,14 +27,24 @@ router.get("/", auth, async (req, res) => {
     }
     if (searchT !== "") {
       if (searchP !== "") {
+        if (searchP == "km" || searchP == "year" || searchP == "deductible") {
+          Number(searchT)
+          query["$or"] = [{ [searchP]: { $eq: searchT } }];
+        } else {
           query["$or"] = [{ [searchP]: sExp }];
+        }
       } else {
         query["$or"] = [
-          {tenant_name : sExp },
+          { tenant_name: sExp },
+          { category: sExp },
           { manufacturer: sExp },
           { model: sExp },
           { license_number: sExp },
+          { driver_names: sExp },
           { status: sExp },
+          { date_created: sExp },
+          { pick_up_date: sExp },
+          { return_date: sExp }
         ];
 
       }
@@ -51,42 +61,24 @@ router.get("/", auth, async (req, res) => {
   }
 })
 
-// router.get("/", auth, async (req, res) => {
-//   let limit = Math.min(req.query.limit, 100) || 20;
-//   let page = req.query.page - 1 || 0;
-//   let sort = req.query.sort || "_id";
-//   let reverse = req.query.reverse == "yes" ? 1 : -1;
-//   let searchT = req.query.s || "";
-//   // search type
-//   let searchP = req.query.search || "name";
-//   let sExp = new RegExp(searchT, "i");
-//   let searchDate = req.query.searchDate || "";
-//   let searchDateS = req.query.searchDateS || "1-1-1900";
-//   let searchDateE = req.query.searchDateE || "1-1-2900";
-//   try {
-//     let data = await InteractionsModel
-//       .find(searchDate ? {
-//         [searchDate]: {
-//           $gt: searchDateS,
-//           $lt: searchDateE
-//         }
-//       } : {})
-//       .find(searchT ? { $or: [{ [searchP]: sExp }] } : {})
-//       .limit(limit)
-//       .skip(page * limit)
-//       .sort({ [sort]: reverse })
-//     res.json(data);
-//   }
-//   catch (err) {
-//     console.log(err);
-//     res.status(502).json({ err })
-//   }
-// })
 
 router.get("/single/:id", auth, async (req, res) => {
   try {
     let worker = await InteractionsModel.findOne({ _id: req.params.id }, { password: 0 });
     res.json(worker);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
+router.get("/count", async (req, res) => {
+  let perPage = req.query.limit;
+  console.log(perPage);
+  try {
+    let data = await InteractionsModel.countDocuments(perPage);
+    res.json({ count: data, pages: Math.ceil(data / perPage) })
   }
   catch (err) {
     console.log(err);
