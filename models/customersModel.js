@@ -3,6 +3,7 @@ const Joi = require("joi");
 
 let customersSchema = new mongoose.Schema({
   name: String,
+  ID_type:String,
   identity: String,
   phone_number: String,
   country: String,
@@ -19,6 +20,7 @@ exports.CustomersModel = mongoose.model("customers", customersSchema)
 exports.validateCustomers = (_reqBody) => {
   let joiSchema = Joi.object({
     name: Joi.string().min(2).max(150).required(),
+    ID_type: Joi.string().min(2).max(150).required(),
     identity: Joi.string().min(2).max(150).required(),
     phone_number: Joi.string().min(2).max(12).required(),
     country: Joi.string().min(2).max(150).required(),
