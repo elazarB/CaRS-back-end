@@ -3,6 +3,7 @@ const Joi = require("joi");
 
 let interactionsSchema = new mongoose.Schema({
   tenant_name: String,
+  category:String,
   car_id:String,
   manufacturer:String,
   model:String,
@@ -25,6 +26,7 @@ exports.InteractionsModel = mongoose.model("interactions", interactionsSchema)
 exports.validateInteractions = (_reqBody) => {
   return Joi.object({
     tenant_name: Joi.string().min(2).max(150).required(),
+    category: Joi.string().min(1).max(150).required(),
     car_id: Joi.string().min(2).max(150).allow(null,""),
     manufacturer: Joi.string().min(1).max(150).allow(null,""),
     model: Joi.string().min(1).max(150).allow(null,""),
