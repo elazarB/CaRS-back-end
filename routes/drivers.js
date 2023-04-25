@@ -79,7 +79,7 @@ router.post("/", auth, async (req, res) => {
   }
   try {
     let drivers = new DriversModel(req.body);
-    drivers.added_by = req.tokenData.user_name;
+    drivers.added_by = req.tokenData._id;
     console.log(req.tokenData);
     await drivers.save();
     res.json(drivers);
