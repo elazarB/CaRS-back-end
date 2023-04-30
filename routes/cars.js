@@ -84,7 +84,7 @@ router.get("/", auth, async (req, res) => {
           query["$or"] = [{ [searchP]: sExp }];
         }
       } else {
-        let num = Number(searchT) != NaN?Number(searchT):"";
+        // let num = Number(searchT) != NaN?Number(searchT):"";
         query["$or"] = [
           { license_number: sExp },
           { manufacturer_en: sExp },
@@ -96,14 +96,16 @@ router.get("/", auth, async (req, res) => {
           { branch: sExp },
           { fuel_type: sExp },
           { class: sExp },
-          { year: { $eq: num } },
-          { km: { $eq: num } }
+          { gearbox: sExp },
+          // { year: { $eq: num } },
+          // { km: { $eq: num } }
 
 
         ];
 
       }
     }
+    
     let data = await CarsModel.find(query)
       .limit(limit)
       .skip(page * limit)
@@ -132,7 +134,6 @@ router.get("/single/:id", auth, async (req, res) => {
 
 router.get("/count", async (req, res) => {
   let perPage = req.query.limit;
-  console.log(perPage);
   try {
     let data = await CarsModel.countDocuments(perPage);
     res.json({ count: data, pages: Math.ceil(data / perPage) })

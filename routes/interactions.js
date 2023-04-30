@@ -93,7 +93,7 @@ router.post("/", auth, async (req, res) => {
   }
   try {
     let Interaction = new InteractionsModel(req.body);
-    Interaction.done_by = req.tokenData.user_name;
+    Interaction.done_by = req.tokenData._id;
     console.log(req.tokenData);
     await Interaction.save();
     res.json(Interaction);

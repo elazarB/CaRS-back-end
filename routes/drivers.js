@@ -24,36 +24,97 @@ const router = express.Router();
 //   }
 // })
 
+// router.get("/", auth, async (req, res) => {
+//   let limit = Math.min(req.query.limit, 100) || 20;
+//   let page = req.query.page - 1 || 0;
+//   let sort1 = req.query.sort1 || "_id";
+//   let sort = req.query.sort == "asc" ? 1 : -1;
+//   // cearch 
+//   let searchT = req.query.s || "";
+//   // search type
+//   let searchP = req.query.search || "name";
+//   let sExp = new RegExp(searchT, "i");
+//   let searchDate = req.query.searchDate || "";
+//   let searchDateS = req.query.searchDateS || "1-1-1900";
+//   let searchDateE = req.query.searchDateE || "1-1-2900";
+//   try {
+//     let data = await DriversModel
+    
+//       .find(searchDate ? {
+//         [searchDate]: {
+//           $gt: searchDateS,
+//           $lt: searchDateE
+//         }
+//       } : {})
+//       .find(searchT ? { $or: [{ [searchP]: sExp }] } : {})
+//       .limit(limit)
+//       .skip(page * limit)
+//       .sort({ [sort]: reverse })
+
+//       console.log(data);
+//     res.json(data);
+    
+//   }
+//   catch (err) {
+//     console.log(err);
+//     res.status(502).json({ err })
+//   }
+// })
+
 router.get("/", auth, async (req, res) => {
-  let limit = Math.min(req.query.limit, 100) || 20;
-  let page = req.query.page - 1 || 0;
-  let sort1 = req.query.sort1 || "_id";
-  let sort = req.query.sort == "asc" ? 1 : -1;
-  // cearch 
+  let limit = Math.min(req.query.limit || 20, 100);
+  let page = (req.query.page || 1) - 1;
+  let sort = req.query.sort || "_id";
+  let reverse = req.query.reverse === "yes" ? 1 : -1;
   let searchT = req.query.s || "";
-  // search type
-  let searchP = req.query.search || "name";
+  let searchP = req.query.search || "";
   let sExp = new RegExp(searchT, "i");
   let searchDate = req.query.searchDate || "";
-  let searchDateS = req.query.searchDateS || "1-1-1900";
-  let searchDateE = req.query.searchDateE || "1-1-2900";
+  let searchDateS = new Date(req.query.searchDateS || "1900-01-01");
+  let searchDateE = new Date(req.query.searchDateE || "2900-01-01");
+
   try {
-    let data = await DriversModel
-    
-      .find(searchDate ? {
-        [searchDate]: {
-          $gt: searchDateS,
-          $lt: searchDateE
+    let query = {};
+    if (searchDate !== "") {
+      query[searchDate] = {
+        $gt: searchDateS,
+        $lt: searchDateE,
+      };
+    }
+    if (searchT !== "") {
+      if (searchP !== "") {
+        if (searchP == "km" || searchP == "year" || searchP == "deductible") {
+          Number(searchT)
+          query["$or"] = [{ [searchP]: { $eq: searchT } }];
+        } else {
+          query["$or"] = [{ [searchP]: sExp }];
         }
-      } : {})
-      .find(searchT ? { $or: [{ [searchP]: sExp }] } : {})
+      } else {
+        // let num = Number(searchT) != NaN?Number(searchT):"";
+        query["$or"] = [
+          { license_number: sExp },
+          { manufacturer_en: sExp },
+          { manufacturer_hb: sExp },
+          { model_en: sExp },
+          { model_hb: sExp },
+          { color: sExp },
+          { status: sExp },
+          { branch: sExp },
+          { fuel_type: sExp },
+          { class: sExp },
+          // { year: { $eq: num } },
+          // { km: { $eq: num } }
+
+
+        ];
+
+      }
+    }
+    let data = await DriversModel.find(query)
       .limit(limit)
       .skip(page * limit)
-      .sort({ [sort]: reverse })
-
-      console.log(data);
+      .sort({ [sort]: reverse });
     res.json(data);
-    
   }
   catch (err) {
     console.log(err);
