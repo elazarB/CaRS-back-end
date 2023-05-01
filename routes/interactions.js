@@ -27,24 +27,29 @@ router.get("/", auth, async (req, res) => {
     }
     if (searchT !== "") {
       if (searchP !== "") {
-        if (searchP == "km" || searchP == "year" || searchP == "deductible") {
-          Number(searchT)
-          query["$or"] = [{ [searchP]: { $eq: searchT } }];
-        } else {
-          query["$or"] = [{ [searchP]: sExp }];
-        }
+        query["$or"] = [{ [searchP]: sExp }];
       } else {
         query["$or"] = [
           { tenant_name: sExp },
           { category: sExp },
-          { manufacturer: sExp },
-          { model: sExp },
-          { license_number: sExp },
+          {
+            car_obj: [
+              { license_number: sExp },
+              { manufacturer_en: sExp },
+              { manufacturer_hb: sExp },
+              { model_en: sExp },
+              { model_hb: sExp },
+              { color: sExp },
+              { status: sExp },
+              { branch: sExp },
+              { fuel_type: sExp },
+              { class: sExp },
+              { gearbox: sExp }
+            ]
+          },
           { driver_names: sExp },
           { status: sExp },
-          { date_created: sExp },
-          { pick_up_date: sExp },
-          { return_date: sExp }
+
         ];
 
       }
@@ -60,6 +65,10 @@ router.get("/", auth, async (req, res) => {
     res.status(502).json({ err })
   }
 })
+
+
+
+
 
 
 router.get("/single/:id", auth, async (req, res) => {
@@ -112,7 +121,7 @@ router.patch("/:id/:status", auth, async (req, res) => {
   try {
     let id = req.params.id;
     let status = req.params.status;
-    let data = await InteractionsModel.updateOne({ _id: id },{status:status});
+    let data = await InteractionsModel.updateOne({ _id: id }, { status: status });
     res.json(data);
   }
   catch (err) {
