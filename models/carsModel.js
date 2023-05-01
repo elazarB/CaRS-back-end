@@ -55,7 +55,6 @@ exports.validateCars = (_reqBody) => {
     class: Joi.string().min(1).max(150).required(),
     deductible: Joi.number().min(2).max(20000).required(),
     coder: Joi.string().min(2).max(20).allow(null,""),
-    img_manufacturer: Joi.string().min(2).max(1000).allow(null,""),
     images: Joi.array().min(0).max(100).allow(null,""),
     files: Joi.array().min(0).max(100).allow(null,""),
     
