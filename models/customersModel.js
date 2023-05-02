@@ -24,7 +24,7 @@ exports.validateCustomers = (_reqBody) => {
     ID_type: Joi.string().min(2).max(150).required(),
     identity: Joi.string().min(2).max(150).required(),
     phone_number: Joi.string().min(2).max(12).required(),
-    phone_number: Joi.string().min(2).max(12).allow(null,""),
+    another_phone_number: Joi.string().min(2).max(12).allow(null,""),
     country: Joi.string().min(2).max(150).required(),
     city: Joi.string().min(2).max(150).required(),
     address: Joi.string().min(2).max(150).required(),
