@@ -46,7 +46,6 @@ router.get("/", auth, async (req, res) => {
           ];
       }
     }
-    console.log(query);
     let data = await InteractionsModel.find(query)
       .limit(limit)
       .skip(page * limit)

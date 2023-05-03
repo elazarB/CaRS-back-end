@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
+const { config } = require("../config/secrets");
 
 const workerSchema = new mongoose.Schema({
   name:String,
@@ -22,15 +23,13 @@ const workerSchema = new mongoose.Schema({
 
 exports.WorkerModel = mongoose.model("workers",workerSchema);
 
-// פונקציה שמייצרת טוקן שמכיל את האיי די של המשתמש
-// תקף ל 10 שעות
+
 exports.createToken = (worker_id,role) => {
-  let token = jwt.sign({_id:worker_id,role},"carsSecret",{expiresIn:"600mins"})
+  let token = jwt.sign({_id:worker_id,role},config.token_secret,{expiresIn:"600mins"})
   return token;
 }
 
-// עושה בדיקה בצד שרת אם המידע תקין
-// לפני ששולח לצד של המסד
+
 exports.validateWorker = (_reqBody) => {
   let joiSchema = Joi.object({
     name:Joi.string().min(2).max(150).required(),

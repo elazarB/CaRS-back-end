@@ -119,7 +119,18 @@ router.get("/", auth, async (req, res) => {
 })
 
 
+router.get("/graph", auth, async (req, res) => {
 
+  let statusS = req.query.status;
+  try {
+    let data = await CarsModel.count({status: statusS});
+    res.json(data)
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
 
 router.get("/single/:id", auth, async (req, res) => {
   try {
@@ -136,7 +147,7 @@ router.get("/count",auth, async (req, res) => {
   let perPage = req.query.limit;
   try {
     let data = await CarsModel.countDocuments(perPage);
-    res.json({ count: data, pages: Math.ceil(data / perPage) })
+    res.json({ count: data, count: Math.ceil(data / perPage) })
   }
   catch (err) {
     console.log(err);
