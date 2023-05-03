@@ -39,7 +39,7 @@ const router = express.Router();
 //   let searchDateE = req.query.searchDateE || "1-1-2900";
 //   try {
 //     let data = await DriversModel
-    
+
 //       .find(searchDate ? {
 //         [searchDate]: {
 //           $gt: searchDateS,
@@ -53,7 +53,7 @@ const router = express.Router();
 
 //       console.log(data);
 //     res.json(data);
-    
+
 //   }
 //   catch (err) {
 //     console.log(err);
@@ -83,29 +83,14 @@ router.get("/", auth, async (req, res) => {
     }
     if (searchT !== "") {
       if (searchP !== "") {
-        if (searchP == "km" || searchP == "year" || searchP == "deductible") {
-          Number(searchT)
-          query["$or"] = [{ [searchP]: { $eq: searchT } }];
-        } else {
-          query["$or"] = [{ [searchP]: sExp }];
-        }
+        query["$or"] = [{ [searchP]: sExp }];
       } else {
         // let num = Number(searchT) != NaN?Number(searchT):"";
         query["$or"] = [
-          { license_number: sExp },
-          { manufacturer_en: sExp },
-          { manufacturer_hb: sExp },
-          { model_en: sExp },
-          { model_hb: sExp },
-          { color: sExp },
-          { status: sExp },
-          { branch: sExp },
-          { fuel_type: sExp },
-          { class: sExp },
-          // { year: { $eq: num } },
-          // { km: { $eq: num } }
-
-
+          { name: sExp },
+          { identity: sExp },
+          { phone_number: sExp },
+          { email: sExp },
         ];
 
       }

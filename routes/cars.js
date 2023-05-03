@@ -132,7 +132,7 @@ router.get("/single/:id", auth, async (req, res) => {
   }
 })
 
-router.get("/count", async (req, res) => {
+router.get("/count",auth, async (req, res) => {
   let perPage = req.query.limit;
   try {
     let data = await CarsModel.countDocuments(perPage);

@@ -29,31 +29,24 @@ router.get("/", auth, async (req, res) => {
       if (searchP !== "") {
         query["$or"] = [{ [searchP]: sExp }];
       } else {
-        query["$or"] = [
-          { tenant_name: sExp },
-          { category: sExp },
-          {
-            car_obj: [
-              { license_number: sExp },
-              { manufacturer_en: sExp },
-              { manufacturer_hb: sExp },
-              { model_en: sExp },
-              { model_hb: sExp },
-              { color: sExp },
-              { status: sExp },
-              { branch: sExp },
-              { fuel_type: sExp },
-              { class: sExp },
-              { gearbox: sExp }
-            ]
-          },
-          { driver_names: sExp },
-          { status: sExp },
-
-        ];
-
+        query["$or"] =
+           [
+            { 'tenant_name.name': sExp },
+            { 'tenant_name.phone_number': sExp },
+            { 'tenant_name.identity': sExp },
+            { 'tenant_name.another_phone_number': sExp },
+            { 'category': sExp },
+            { 'car_obj.license_number': sExp },
+            { 'car_obj.manufacturer_en': sExp },
+            { 'car_obj.manufacturer_hb': sExp },
+            { 'car_obj.model_en': sExp },
+            { 'car_obj.model_hb': sExp },
+            { 'driver_names.name': sExp },
+            { 'status': sExp },
+          ];
       }
     }
+    console.log(query);
     let data = await InteractionsModel.find(query)
       .limit(limit)
       .skip(page * limit)
@@ -68,6 +61,20 @@ router.get("/", auth, async (req, res) => {
 
 
 
+
+router.get("/test", async (req, res) => {
+
+  try {
+
+    // let data = await InteractionsModel.find({$and:[{"car_obj.license_number":'6510575'}]})
+    let data = await InteractionsModel.find({ $and: [{ "driver_names.name": 'moshe' }] })
+    res.json(data);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
 
 
 
