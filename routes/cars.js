@@ -118,6 +118,16 @@ router.get("/", auth, async (req, res) => {
   }
 })
 
+router.get("/names",  async (req, res) => {
+  try{
+     let data = await CarsModel.find({status:'פנוי'},{manufacturer_hb:1,model_hb:1,class:1})
+     res.json(data);
+   }
+   catch (err) {
+     console.log(err);
+     res.status(502).json({ err })
+   }
+ })
 
 router.get("/graph", auth, async (req, res) => {
 

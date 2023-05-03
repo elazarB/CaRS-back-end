@@ -107,7 +107,7 @@ router.get("/", auth, async (req, res) => {
   }
 })
 
-router.get("/names",  async (req, res) => {
+router.get("/names", auth, async (req, res) => {
   try{
      let data = await DriversModel.find({},{name:1,identity:1})
      res.json(data);
