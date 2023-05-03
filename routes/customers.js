@@ -87,6 +87,17 @@ router.get("/", auth, async (req, res) => {
   }
 })
 
+router.get("/names",  async (req, res) => {
+ try{
+    let data = await CustomersModel.find({},{name:1,identity:1})
+    res.json(data);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
 router.get("/single/:id", auth, async (req, res) => {
   try {
     let worker = await CustomersModel.findOne({ _id: req.params.id }, { password: 0 });
