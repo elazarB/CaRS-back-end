@@ -129,6 +129,19 @@ router.get("/single/:id", auth, async (req, res) => {
   }
 })
 
+router.get("/count",auth, async (req, res) => {
+  let perPage = req.query.limit;
+  console.log(perPage);
+  try {
+    let data = await DriversModel.countDocuments(perPage);
+    res.json({ count: data, pages: Math.ceil(data / perPage) })
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
 router.post("/", auth, async (req, res) => {
   let validBody = validateDrivers(req.body);
   if (validBody.error) {

@@ -36,7 +36,7 @@ router.get("/single/:id", auth, async (req, res) => {
   }
 })
 
-router.get("/allWorker", auth, async (req, res) => {
+router.get("/allWorker", authAdmin, async (req, res) => {
   let limit = Math.min(req.query.limit || 20, 100);
   let page = (req.query.page || 1) - 1;
   let sort = req.query.sort || "_id";
@@ -88,6 +88,19 @@ router.get("/allWorker", auth, async (req, res) => {
 router.get("/allWorker/count", async (req, res) => {
   let perPage = req.query.limit;
   
+  try {
+    let data = await WorkerModel.countDocuments(perPage);
+    res.json({ count: data, pages: Math.ceil(data / perPage) })
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
+router.get("/count",auth, async (req, res) => {
+  let perPage = req.query.limit;
+  console.log(perPage);
   try {
     let data = await WorkerModel.countDocuments(perPage);
     res.json({ count: data, pages: Math.ceil(data / perPage) })

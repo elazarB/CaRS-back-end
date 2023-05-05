@@ -88,7 +88,7 @@ router.get("/single/:id", auth, async (req, res) => {
   }
 })
 
-router.get("/count", async (req, res) => {
+router.get("/count",auth, async (req, res) => {
   let perPage = req.query.limit;
   console.log(perPage);
   try {
