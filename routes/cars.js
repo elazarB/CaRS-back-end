@@ -129,17 +129,18 @@ router.get("/names",  async (req, res) => {
    }
  })
 
-router.get("/graph", auth, async (req, res) => {
 
-  let statusS = req.query.status;
-  try {
-    let data = await CarsModel.count({status: statusS});
-    res.json(data)
-  }
-  catch (err) {
-    console.log(err);
-    res.status(502).json({ err })
-  }
+router.get("/graph", auth, async (req, res) => {
+  try{
+    let data = await CarsModel.aggregate([
+     { $group: {_id: "$status", y: { $sum: 1 } } }
+   ]);
+   res.json(data);
+ }
+ catch (err) {
+   console.log(err);
+   res.status(502).json({ err });
+ }
 })
 
 router.get("/single/:id", auth, async (req, res) => {
