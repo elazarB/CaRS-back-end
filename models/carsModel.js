@@ -49,7 +49,7 @@ exports.validateCars = (_reqBody) => {
     fuel_type: Joi.string().min(2).max(150).required(),
     exp_ins: Joi.date().min("1-1-2023").max("1-1-2100").required(),
     exp_test: Joi.date().min("1-1-2020").max("1-1-2100").required(),
-    last_treatment: Joi.date().min("1-1-2023").max("1-1-2100"),
+    last_treatment: Joi.date().min("1-1-2000").max("1-1-2100"),
     km_next_treatment: Joi.number().min(2).max(500000),
     date_next_treatment: Joi.date().min("1-1-2023").max("1-1-2100"),
     class: Joi.string().min(1).max(150).required(),
