@@ -1,8 +1,4 @@
-
-
 require('dotenv').config();
-console.log(process.env.USER_DB);
-
 
 exports.config = {
   db_pass: process.env.PASS_DB,
