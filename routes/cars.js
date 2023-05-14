@@ -135,6 +135,11 @@ router.get("/graph", auth, async (req, res) => {
     let data = await CarsModel.aggregate([
      { $group: {_id: "$status", y: { $sum: 1 } } }
    ]);
+  //  data.map((s, i) => {
+  //   s['x'] = s['_id']
+  //   delete s['_id']
+  // })
+  console.log(data);
    res.json(data);
  }
  catch (err) {

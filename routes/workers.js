@@ -85,18 +85,18 @@ router.get("/allWorker", authAdmin, async (req, res) => {
   }
 })
 
-router.get("/allWorker/count", async (req, res) => {
-  let perPage = req.query.limit;
+// router.get("/allWorker/count", async (req, res) => {
+//   let perPage = req.query.limit;
   
-  try {
-    let data = await WorkerModel.countDocuments(perPage);
-    res.json({ count: data, pages: Math.ceil(data / perPage) })
-  }
-  catch (err) {
-    console.log(err);
-    res.status(502).json({ err })
-  }
-})
+//   try {
+//     let data = await WorkerModel.countDocuments(perPage);
+//     res.json({ count: data, pages: Math.ceil(data / perPage) })
+//   }
+//   catch (err) {
+//     console.log(err);
+//     res.status(502).json({ err })
+//   }
+// })
 
 
 router.get("/count",auth, async (req, res) => {
@@ -108,7 +108,7 @@ router.get("/count",auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    // res.status(502).json({ err })
   }
 })
 
@@ -133,7 +133,7 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ msg: "user name already in system", code: 11000 })
     }
     console.log(err);
-    res.status(502).json({ err })
+    // res.status(502).json({ err })
   }
 })
 
@@ -164,7 +164,7 @@ router.post("/logIn", async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    // res.status(502).json({ err })
   }
 })
 
