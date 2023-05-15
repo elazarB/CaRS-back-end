@@ -22,7 +22,7 @@ exports.InteractionsModel = mongoose.model("interactions", interactionsSchema)
 
 exports.validateInteractions = (_reqBody) => {
   return Joi.object({
-    tenant_name: Joi.object().min(0).max(150).required(),
+    tenant_name: Joi.object().min(1).max(150).required(),
     category: Joi.string().min(1).max(150).required(),
     car_id: Joi.object().min(0).max(150).allow(null,""),
     license_number: Joi.string().min(2).max(150).required(),
