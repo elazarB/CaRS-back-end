@@ -56,6 +56,7 @@ const router = express.Router();
 // }
 
 router.get("/", auth, async (req, res) => {
+  console.log(new Date('2023-05-24'));
   let limit = Math.min(req.query.limit || 20, 100);
   let page = (req.query.page || 1) - 1;
   let sort = req.query.sort || "_id";
@@ -180,7 +181,7 @@ router.post("/", auth, async (req, res) => {
   try {
     let cars = new CarsModel(req.body);
     cars.added_by = req.tokenData._id;
-    console.log(req.tokenData);
+   
     await cars.save();
     res.json(cars);
   }

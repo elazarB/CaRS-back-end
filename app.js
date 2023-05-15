@@ -4,7 +4,7 @@ const http = require("http");
 // מודול שיודע לפתור את בעיית האבטחת של הקורס
 // שלא ניתן בברירת מחדל לשלוח מדומיין א' בקשה לדומיין ב
 const cors = require("cors");
-
+process.env.TZ = 'Israel';
 
 const {routesInit} = require("./routes/configRoutes");
 require("./db/mongoConnect");
