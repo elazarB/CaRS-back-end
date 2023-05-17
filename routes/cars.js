@@ -107,7 +107,7 @@ router.get("/", auth, async (req, res) => {
           { fuel_type: sExp },
           { class: sExp },
           { gearbox: sExp },
-          // { year: { $eq: num } },
+          { year: sExp },
           // { km: { $eq: num } }
 
 
