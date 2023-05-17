@@ -7,7 +7,7 @@ let carsSchema = new mongoose.Schema({
   manufacturer_hb: String,
   model_en: String,
   model_hb: String,
-  gearbox:String,
+  gearbox: String,
   year: Number,
   color: String,
   finish_level: String,
@@ -16,7 +16,7 @@ let carsSchema = new mongoose.Schema({
   branch: String,
   fuel_type: String,
   exp_ins: Date,
-  exp_test:Date,
+  exp_test: Date,
   last_treatment: Date,
   km_next_treatment: Number,
   date_next_treatment: Date,
@@ -24,11 +24,27 @@ let carsSchema = new mongoose.Schema({
   deductible: Number,
   coder: String,
   added_by: String,
-  date_join:{
+  date_join: {
     type: Date, default: Date.now
   },
   images: Array,
   files: Array,
+  last_test_date: Date,
+  license_fee: Number,
+  fee_paid: Boolean,
+  insurance_coverage: String,
+  date_policy_issued: Date,
+  mandatory_premium_amount: Number,
+  third_party_premium_amount: Number,
+  access_amount: Number,
+  compulsory_payment_arrangement: String,
+  third_party_payment_deployment: String,
+  minimum_age: String,
+  minimum_seniority: String,
+  collective: String,
+  mandatory_payment_method: String,
+  third_party_payment_method: String,
+
 })
 exports.CarsModel = mongoose.model("cars", carsSchema)
 
@@ -54,10 +70,21 @@ exports.validateCars = (_reqBody) => {
     date_next_treatment: Joi.date().min("1-1-2023").max("1-1-2100"),
     class: Joi.string().min(1).max(150).required(),
     deductible: Joi.number().min(2).max(20000).required(),
-    coder: Joi.string().min(2).max(20).allow(null,""),
-    images: Joi.array().min(0).max(100).allow(null,""),
-    files: Joi.array().min(0).max(100).allow(null,""),
-    
+    coder: Joi.string().min(2).max(20).allow(null, ""),
+    images: Joi.array().min(0).max(100).allow(null, ""),
+    files: Joi.array().min(0).max(100).allow(null, ""),
+    last_test_date: Joi.date().min("1-1-2020").max("1-1-2100").allow(null, ""),
+    license_fee: Joi.number().min(2).max(2030).allow(null, ""),
+    fee_paid: Joi.boolean(),
+    insurance_coverage: Joi.string().min(2).max(2030).allow(null, ""),
+    date_policy_issued: Joi.date().min("1-1-2020").max("1-1-2100").allow(null, ""),
+    mandatory_premium_amount: Joi.number().min(2).max(112030).allow(null, ""),
+    third_party_premium_amount: Joi.number().min(2).max(112030).allow(null, ""),
+    minimum_age: Joi.string().min(2).max(2030).allow(null, ""),
+    minimum_seniority: Joi.string().min(2).max(2030).allow(null, ""),
+    collective: Joi.string().min(2).max(2030).allow(null, ""),
+    mandatory_payment_method: Joi.string().min(2).max(2030).allow(null, ""),
+    third_party_payment_method: Joi.string().min(2).max(2030).allow(null, ""),
   })
   return joiSchema.validate(_reqBody)
 }

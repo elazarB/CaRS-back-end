@@ -56,16 +56,25 @@ const router = express.Router();
 // }
 
 router.get("/", auth, async (req, res) => {
-  console.log(new Date('2023-05-24'));
+  //מספר הרכבים מוגבל ל100
   let limit = Math.min(req.query.limit || 20, 100);
+  //העמוד 
   let page = (req.query.page || 1) - 1;
+  //מיון לפי
   let sort = req.query.sort || "_id";
+  //סדר המיון
   let reverse = req.query.reverse === "yes" ? 1 : -1;
+  // מילה או ביטוי לחיפוש
   let searchT = req.query.s || "";
+  //איפה לחפש (אפציונלי)
   let searchP = req.query.search || "";
+  //הןפך את התווים שנשלחו לחיפוש לביטוי
   let sExp = new RegExp(searchT, "i");
+  //לפי איזה תאריך לחפש
   let searchDate = req.query.searchDate || "";
+  //תאריך התחלתי לחיפוש לפי תאריך
   let searchDateS = new Date(req.query.searchDateS || "1900-01-01");
+  //תאריך סיום לחיפוש לפי תאריך
   let searchDateE = new Date(req.query.searchDateE || "2900-01-01");
 
   try {
