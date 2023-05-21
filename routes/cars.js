@@ -109,8 +109,6 @@ router.get("/", auth, async (req, res) => {
           { gearbox: sExp },
           { year: sExp },
           // { km: { $eq: num } }
-
-
         ];
 
       }

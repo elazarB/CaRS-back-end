@@ -7,9 +7,7 @@ const router = express.Router();
 
 // מאזין לכניסה לראוט של העמוד בית לפי מה שנקבע לראוטר
 // בקובץ הקונפיג
-router.get("/", async (req, res) => {
-  res.json({ msg: "Workers work" });
-})
+
 
 
 
@@ -36,7 +34,7 @@ router.get("/single/:id", auth, async (req, res) => {
   }
 })
 
-router.get("/allWorker", authAdmin, async (req, res) => {
+router.get("/", authAdmin, async (req, res) => {
   let limit = Math.min(req.query.limit || 20, 100);
   let page = (req.query.page || 1) - 1;
   let sort = req.query.sort || "_id";
