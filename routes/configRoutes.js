@@ -4,6 +4,7 @@ const customersR = require("./customers");
 const driversR = require("./drivers");
 const carsR = require("./cars");
 const interactionsR = require("./interactions");
+const missionsR = require("./missions");
 
 
 exports.routesInit = (app) => {
@@ -13,6 +14,7 @@ exports.routesInit = (app) => {
   app.use("/drivers", driversR);
   app.use("/cars", carsR);
   app.use("/interactions", interactionsR);
+  app.use("/missions", missionsR);
 }
 
 

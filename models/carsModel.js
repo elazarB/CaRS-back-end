@@ -81,7 +81,7 @@ exports.validateCars = (_reqBody) => {
     mandatory_premium_amount: Joi.number().min(2).max(112030).allow(null, ""),
     third_party_premium_amount: Joi.number().min(2).max(112030).allow(null, ""),
     minimum_age: Joi.string().min(2).max(2030).allow(null, ""),
-    minimum_seniority: Joi.string().min(2).max(2030).allow(null, ""),
+    minimum_seniority: Joi.string().min(0).max(2030).allow(null, ""),
     collective: Joi.string().min(2).max(2030).allow(null, ""),
     mandatory_payment_method: Joi.string().min(2).max(2030).allow(null, ""),
     third_party_payment_method: Joi.string().min(2).max(2030).allow(null, ""),
