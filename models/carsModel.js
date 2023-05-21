@@ -44,7 +44,7 @@ let carsSchema = new mongoose.Schema({
   collective: String,
   mandatory_payment_method: String,
   third_party_payment_method: String,
-
+  policy_number:String,
 })
 exports.CarsModel = mongoose.model("cars", carsSchema)
 
@@ -85,6 +85,7 @@ exports.validateCars = (_reqBody) => {
     collective: Joi.string().min(2).max(2030).allow(null, ""),
     mandatory_payment_method: Joi.string().min(2).max(2030).allow(null, ""),
     third_party_payment_method: Joi.string().min(2).max(2030).allow(null, ""),
+    policy_number: Joi.string().min(2).max(2030).allow(null, ""),
   })
   return joiSchema.validate(_reqBody)
 }
