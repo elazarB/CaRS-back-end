@@ -30,10 +30,9 @@ router.get("/", authAdmin, async (req, res) => {
       } else {
         // let num = Number(searchT) != NaN?Number(searchT):"";
         query["$or"] = [
-          { name: sExp },
-          { identity: sExp },
-          { phone_number: sExp },
-          { email: sExp },
+          { title: sExp },
+          { mission: sExp },
+          { status: sExp },
         ];
 
       }
@@ -52,7 +51,7 @@ router.get("/", authAdmin, async (req, res) => {
 
 router.get("/workerMission/:id", auth, async (req, res) => {
   try {
-    let mission = await MissionsModel.find({ for_id: req.params.id ,status:Awaiting_execution});
+    let mission = await MissionsModel.find({ for_id: req.params.id ,status:undone});
     res.json(mission);
   }
   catch (err) {
