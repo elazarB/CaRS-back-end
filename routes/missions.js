@@ -50,8 +50,10 @@ router.get("/", authAdmin, async (req, res) => {
 })
 
 router.get("/workerMission/:id", auth, async (req, res) => {
+  let query = {status:'לא בוצע'}
+  query["$or"] =[{ for_id:undefined},{'for_id._id':req.params.id} ]
   try {
-    let mission = await MissionsModel.find({ for_id: req.params.id ,status:undone});
+    let mission = await MissionsModel.find(query);
     res.json(mission);
   }
   catch (err) {
@@ -60,7 +62,20 @@ router.get("/workerMission/:id", auth, async (req, res) => {
   }
 })
 
+router.get("/count",auth, async (req, res) => {
+  let perPage = req.query.limit;
+  try {
+    let data = await MissionsModel.countDocuments(perPage);
+    res.json({ count: data, pages: Math.ceil(data / perPage) })
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
 router.post("/", authAdmin, async (req, res) => {
+  console.log(req.body);
   let validBody = validateMissions(req.body);
   if (validBody.error) {
     return res.status(400).json(validBody.error.details);
@@ -87,6 +102,19 @@ router.put("/:id", auth, async (req, res) => {
     let id = req.params.id;
     let data;
     data = await MissionsModel.updateOne({ _id: id }, req.body);
+    res.json(data);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
+router.patch("/:id", auth, async (req, res) => {
+  try {
+    let _id = req.params.id;
+
+    let data = await MissionsModel.updateOne({ _id: _id }, { status: 'בוצע' });
     res.json(data);
   }
   catch (err) {
