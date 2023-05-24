@@ -93,7 +93,7 @@ router.post("/", authAdmin, async (req, res) => {
   }
 })
 
-router.put("/:id", auth, async (req, res) => {
+router.put("/:id", authAdmin, async (req, res) => {
   let validBody = validateMissions(req.body);
   if (validBody.error) {
     return res.status(400).json(validBody.error.details);

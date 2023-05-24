@@ -106,6 +106,9 @@ router.post("/", auth, async (req, res) => {
   if (validBody.error) {
     return res.status(400).json(validBody.error.details);
   }
+  if(Object.keys(req.body.tenant_name).length === 0){
+    return res.status(400).json({msg:'tenant_name is required!'});
+  }
   try {
     let Interaction = new InteractionsModel(req.body);
     Interaction.done_by = req.tokenData._id;
