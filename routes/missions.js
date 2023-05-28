@@ -75,7 +75,6 @@ router.get("/count",auth, async (req, res) => {
 })
 
 router.post("/", authAdmin, async (req, res) => {
-  console.log(req.body);
   let validBody = validateMissions(req.body);
   if (validBody.error) {
     return res.status(400).json(validBody.error.details);
@@ -83,7 +82,6 @@ router.post("/", authAdmin, async (req, res) => {
   try {
     let mission = new MissionsModel(req.body);
     mission.added_by = req.tokenData._id;
-    console.log(req.tokenData);
     await mission.save();
     res.json(mission);
   }

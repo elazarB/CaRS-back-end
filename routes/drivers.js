@@ -74,7 +74,6 @@ router.get("/single/:id", auth, async (req, res) => {
 
 router.get("/count",auth, async (req, res) => {
   let perPage = req.query.limit;
-  console.log(perPage);
   try {
     let data = await DriversModel.countDocuments(perPage);
     res.json({ count: data, pages: Math.ceil(data / perPage) })
@@ -93,7 +92,6 @@ router.post("/", auth, async (req, res) => {
   try {
     let drivers = new DriversModel(req.body);
     drivers.added_by = req.tokenData._id;
-    console.log(req.tokenData);
     await drivers.save();
     res.json(drivers);
   }
