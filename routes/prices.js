@@ -5,17 +5,11 @@ const { PricesModel, validatePrices } = require("../models/pricesModel");
 const router = express.Router();
 
 router.get("/", auth, async (req, res) => {
-  let limit = Math.min(req.query.limit || 20, 100);
-  let page = (req.query.page || 1) - 1;
-  let sort = req.query.sort || "_id";
-  let reverse = req.query.reverse === "yes" ? 1 : -1;
   let search = req.query.s || 'מחירון 1'
 
   try {
-    let data = await PricesModel.find({title:search})
-      .limit(limit)
-      .skip(page * limit)
-      .sort({ [sort]: reverse });
+    let data = await PricesModel.find({title:search},{pricing:1})
+      data = data[0].pricing
     res.json(data);
   }
   catch (err) {
@@ -29,8 +23,7 @@ router.get("/", auth, async (req, res) => {
 router.get("/count",auth, async (req, res) => {
   let perPage = req.query.limit;
   try {
-    let data = await PricesModel.countDocuments(perPage);
-    res.json({ count: data, pages: Math.ceil(data / perPage) })
+    res.json({ count: 13, pages: Math.ceil(13 / perPage) })
   }
   catch (err) {
     console.log(err);
@@ -38,32 +31,26 @@ router.get("/count",auth, async (req, res) => {
   }
 })
 
-// router.post("/", authAdmin, async (req, res) => {
-//   console.log(req.body);
-//   let validBody = validatePrices(req.body);
-//   if (validBody.error) {
-//     return res.status(400).json(validBody.error.details);
-//   }
-//   try {
-//     let mewPrices = new PricesModel(req.body);
-//     await mewPrices.save();
-//     res.json(mewPrices);
-//   }
-//   catch (err) {
-//     console.log(err);
-//     res.status(502).json({ err })
-//   }
-// })
-
-router.put("/:id", authAdmin, async (req, res) => {
-  let validBody = validatePrices(req.body);
-  if (validBody.error) {
-    return res.status(400).json(validBody.error.details);
-  }
+router.get("/titles",auth, async (req, res) => {
   try {
-    let id = req.params.id;
-    let data;
-    data = await PricesModel.updateOne({ _id: id }, req.body);
+    let data = await PricesModel.find({},{title:1,from:1,to:1})
+    res.json(data)
+  }
+  catch (err) {
+    console.log(err);
+    res.status(502).json({ err })
+  }
+})
+
+
+router.patch("/:index/:letter", authAdmin, async (req, res) => {
+  try {
+    let index = req.params.index
+    let letter = req.params.letter
+    let data = await PricesModel.updateOne(
+      { title: index, "pricing.letter": letter },
+      { $set: { "pricing.$": req.body } }
+    );
     res.json(data);
   }
   catch (err) {
@@ -71,10 +58,6 @@ router.put("/:id", authAdmin, async (req, res) => {
     res.status(502).json({ err })
   }
 })
-
-
-
-
 
 
 module.exports = router;
