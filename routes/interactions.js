@@ -2,7 +2,6 @@ const express = require("express");
 const { InteractionsModel, validateInteractions } = require("../models/interactionsModel");
 const { auth } = require("../middlewares/auth");
 
-
 const router = express.Router();
 
 router.get("/", auth, async (req, res) => {
@@ -58,9 +57,6 @@ router.get("/", auth, async (req, res) => {
   }
 })
 
-
-
-
 router.get("/test", async (req, res) => {
 
   try {
@@ -74,8 +70,6 @@ router.get("/test", async (req, res) => {
     res.status(502).json({ err })
   }
 })
-
-
 
 router.get("/single/:id", auth, async (req, res) => {
   try {
@@ -124,7 +118,6 @@ router.post("/", auth, async (req, res) => {
     res.status(502).json({ err })
   }
 })
-
 
 router.patch("/:id/:status", auth, async (req, res) => {
   try {

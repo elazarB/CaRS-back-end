@@ -31,7 +31,6 @@ exports.validateInteractions = (_reqBody) => {
     return_date: Joi.date().min("1-1-2023").max("1-1-2100").required(),
     return_time: Joi.string().min(2).max(150).required(),
     driver_names: Joi.array().min(2).max(150).allow(null,""),
-    // done_by: Joi.string().min(2).max(150).required(),
     status: Joi.string().min(2).max(150).required(),
     images: Joi.array().min(0).max(100).allow(null,""),
     files: Joi.array().min(0).max(100).allow(null,""),

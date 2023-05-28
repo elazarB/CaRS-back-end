@@ -7,11 +7,11 @@ exports.auth = (req,res,next) => {
     return res.status(401).json({msg:"You must send token in the header to this endpoint"})
   }
   try{
-    // בודק אם הטוקן תקין או בתקוף
+    // Checks if the token is valid or under attack
     let decodeToken = jwt.verify(token,config.token_secret);
-    // req -> יהיה זהה בכל הפונקציות שמורשרות באותו ראוטר
+    // req -> will be the same in all the functions connected to the same router
     req.tokenData = decodeToken;
-    // לעבור לפונקציה הבאה בשרשור
+    // Move to the next function in the chain
     next();
   }
   catch(err){
@@ -26,14 +26,14 @@ exports.authAdmin = (req,res,next) => {
     return res.status(401).json({msg:"You must send token in the header to this endpoint"})
   }
   try{
-    // בודק אם הטוקן תקין או בתקוף
+    // Checks if the token is valid or under attack
     let decodeToken = jwt.verify(token,config.token_secret);
     if(decodeToken.role != "admin"){
       return res.status(401).json({msg:"Just admin can be in this endpoint"})
     }
-    // req -> יהיה זהה בכל הפונקציות שמורשרות באותו ראוטר
+     // req -> will be the same in all the functions connected to the same router
     req.tokenData = decodeToken;
-    // לעבור לפונקציה הבאה בשרשור
+   // Move to the next function in the chain
     next();
   }
   catch(err){

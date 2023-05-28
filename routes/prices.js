@@ -18,8 +18,6 @@ router.get("/", auth, async (req, res) => {
   }
 })
 
-
-
 router.get("/count",auth, async (req, res) => {
   let perPage = req.query.limit;
   try {
@@ -41,7 +39,6 @@ router.get("/titles",auth, async (req, res) => {
     res.status(502).json({ err })
   }
 })
-
 
 router.patch("/:index/:letter", authAdmin, async (req, res) => {
   try {

@@ -54,14 +54,3 @@ exports.validateLogin = (_reqBody) => {
   })
   return joiSchema.validate(_reqBody);
 }
-
-// exports.validateRoleChange = (_reqBody) => {
-//   let joiSchema = Joi.object({
-//     name:Joi.string().min(2).max(150).required(),
-//     user_name:Joi.string().min(2).max(150).required(),
-//     password:Joi.string().min(3).max(150).required(),
-    
-
-//   })
-//   return joiSchema.validate(_reqBody);
-// }
