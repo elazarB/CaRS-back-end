@@ -128,7 +128,7 @@ router.get("/location/:licenseN", async (req, res) => {
   
   axios.request(config)
   .then((response) => {
-    res.json(response.data)
+    res.json({data:response.data})
     console.log(JSON.stringify(response.data));
   })
   .catch((error) => {
