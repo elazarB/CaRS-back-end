@@ -5,13 +5,6 @@ const { WorkerModel, validateWorker, validateLogin, createToken, validateRoleCha
 
 const router = express.Router();
 
-// מאזין לכניסה לראוט של העמוד בית לפי מה שנקבע לראוטר
-// בקובץ הקונפיג
-
-
-
-
-// מחזיר למשתמש את הפרטים שלו
 router.get("/workerInfo", auth, async (req, res) => {
   try {
     let worker = await WorkerModel.findOne({ _id: req.tokenData._id }, { password: 0 });
@@ -91,7 +84,7 @@ router.get("/count",auth, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    // res.status(502).json({ err })
+    res.status(502).json({ err })
   }
 })
 
@@ -116,7 +109,7 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ msg: "user name already in system", code: 11000 })
     }
     console.log(err);
-    // res.status(502).json({ err })
+    res.status(502).json({ err })
   }
 })
 
@@ -126,12 +119,12 @@ router.post("/logIn", async (req, res) => {
     return res.json(validBody.error.details);
   }
   try {
-    // לבדוק אם בכלל יש רשומה עם המייל שנשלח
+    // Checks if there is even a record with the email sent
     let user = await WorkerModel.findOne({ user_name: req.body.user_name })
     if (!user) {
       return res.json({ msg: "Information problem" })
     }
-    // לבדוק אם הרשומה שנמצאה הסיסמא המוצפנות בתוכה מתאימה 
+    // Checks if the found record and the encrypted password in it match
     let validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) {
       return res.json({ msg: "Information problem" })
@@ -140,14 +133,14 @@ router.post("/logIn", async (req, res) => {
       return res.json({ msg: "Exists and without permission" })
     }
 
-    // לשלוח טוקן
+    // sending a token
     let token = createToken(user._id, user.role,)
 
     res.json({ token })
   }
   catch (err) {
     console.log(err);
-    // res.status(502).json({ err })
+    res.json({ err })
   }
 })
 
@@ -158,14 +151,12 @@ router.put("/:id", auth, async (req, res) => {
   }
   try {
     let id = req.params.id;
-    // req.body.role = req.params.role;
-    // const filterDb = tokenData.role == 'admin'?{_id:id} : { _id: req.tokenData._id }
     let data = await WorkerModel.updateOne(req.tokenData.role == 'admin' ? { _id: id } : { _id: req.tokenData._id }, req.body);
     res.json(data);
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.json({ err })
   }
 })
 
@@ -179,7 +170,7 @@ router.patch("/:id", authAdmin, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.json({ err })
   }
 })
 
@@ -191,10 +182,8 @@ router.delete("/:id", authAdmin, async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(502).json({ err })
+    res.json({ err })
   }
 })
-
-
 
 module.exports = router;

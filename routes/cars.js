@@ -2,6 +2,7 @@ const express = require("express");
 const { CarsModel, validateCars } = require("../models/carsModel");
 const { auth } = require("../middlewares/auth");
 const { number } = require("joi");
+const axios = require('axios');
 
 const router = express.Router();
 
@@ -113,6 +114,29 @@ router.get("/count",auth, async (req, res) => {
   }
 })
 
+router.get("/location/:licenseN", async (req, res) => {
+  const licenseN = req.params.licenseN
+  
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: `https://www.ituran.com/ituranwebservice3/Service3.asmx/GetPlatformData_JSON?UserName=%D7%A9%D7%97%D7%A0%D7%A8%20%D7%9E%D7%95%D7%98%D7%95%D7%A8%D7%A11&Password=api@API123&Plate=${licenseN}&ShowAreas=True&ShowStatuses=True&ShowMileageInMeters=true&ShowDriver=false`,
+    headers: { 
+      'Cookie': 'GCLB=CLKd_Ljdwq2o1QE; MOBILESRV=a4-h'
+    }
+  };
+  
+  axios.request(config)
+  .then((response) => {
+    res.json(response.data)
+    console.log(JSON.stringify(response.data));
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+  
+})
+
 router.post("/", auth, async (req, res) => {
   let validBody = validateCars(req.body);
   if (validBody.error) {
@@ -162,6 +186,5 @@ router.delete("/:id", auth, async (req, res) => {
     res.status(502).json({ err })
   }
 })
-
 
 module.exports = router;
