@@ -28,7 +28,7 @@ router.get("/", auth, async (req, res) => {
     }
     if (searchT !== "") {
       if (searchP !== "") {
-        if (searchP == "km" || searchP == "year" || searchP == "deductible") {
+        if (searchP == "km" ||  searchP == "deductible") {
           Number(searchT)
           query["$or"] = [{ [searchP]: { $eq: searchT } }];
         } else {
@@ -49,7 +49,8 @@ router.get("/", auth, async (req, res) => {
           { class: sExp },
           { gearbox: sExp },
           { year: sExp },
-          // { km: { $eq: num } }
+          { km: { $eq: Number(searchT) } },
+          { deductible: { $eq: Number(searchT) } }
         ];
 
       }
@@ -135,7 +136,7 @@ router.get("/location/:licenseN", async (req, res) => {
     console.log(error);
   });
   
-})
+}) 
 
 router.post("/", auth, async (req, res) => {
   let validBody = validateCars(req.body);
@@ -151,7 +152,7 @@ router.post("/", auth, async (req, res) => {
   }
   catch (err) {
     if (err.code == 11000) {
-      return res.status(400).json({ msg: "license number already in system", code: 11000 })
+      return res.status(11000).json({ msg: "license number already in system", code: 11000 })
     }
     console.log(err);
     res.status(502).json({ err })

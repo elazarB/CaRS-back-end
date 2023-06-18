@@ -1,6 +1,7 @@
 const express = require("express");
 const { auth, authAdmin } = require("../middlewares/auth");
 const { MissionsModel, validateMissions } = require("../models/missionsModel");
+const { SendingAnEmailForNewMission } = require("../functions/sendEmail");
 
 const router = express.Router();
 
@@ -41,6 +42,7 @@ router.get("/", authAdmin, async (req, res) => {
       .limit(limit)
       .skip(page * limit)
       .sort({ [sort]: reverse });
+    data.forEach((item) => { item.time_to_do = JSON.stringify(item.time_to_do) })
     res.json(data);
   }
   catch (err) {
@@ -50,8 +52,9 @@ router.get("/", authAdmin, async (req, res) => {
 })
 
 router.get("/workerMission/:id", auth, async (req, res) => {
-  let query = {status:'לא בוצע'}
-  query["$or"] =[{ for_id:undefined},{'for_id._id':req.params.id} ]
+
+  let query = { status: 'לא בוצע' }
+  query["$or"] = [{ for_id: undefined }, { 'for_id._id': req.params.id }]
   try {
     let mission = await MissionsModel.find(query);
     res.json(mission);
@@ -62,7 +65,7 @@ router.get("/workerMission/:id", auth, async (req, res) => {
   }
 })
 
-router.get("/count",auth, async (req, res) => {
+router.get("/count", auth, async (req, res) => {
   let perPage = req.query.limit;
   try {
     let data = await MissionsModel.countDocuments(perPage);
@@ -83,7 +86,11 @@ router.post("/", authAdmin, async (req, res) => {
     let mission = new MissionsModel(req.body);
     mission.added_by = req.tokenData._id;
     await mission.save();
+    if (mission.for_id) {
+      SendingAnEmailForNewMission(mission)
+    }
     res.json(mission);
+
   }
   catch (err) {
     console.log(err);

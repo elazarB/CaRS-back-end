@@ -8,8 +8,8 @@ router.get("/", auth, async (req, res) => {
   let search = req.query.s || 'מחירון 1'
 
   try {
-    let data = await PricesModel.find({title:search},{pricing:1})
-      data = data[0].pricing
+    let data = await PricesModel.find({ title: search }, { pricing: 1 })
+    data = data[0].pricing
     res.json(data);
   }
   catch (err) {
@@ -18,7 +18,7 @@ router.get("/", auth, async (req, res) => {
   }
 })
 
-router.get("/count",auth, async (req, res) => {
+router.get("/count", auth, async (req, res) => {
   let perPage = req.query.limit;
   try {
     res.json({ count: 13, pages: Math.ceil(13 / perPage) })
@@ -29,9 +29,9 @@ router.get("/count",auth, async (req, res) => {
   }
 })
 
-router.get("/titles",auth, async (req, res) => {
+router.get("/titles", auth, async (req, res) => {
   try {
-    let data = await PricesModel.find({},{title:1,from:1,to:1})
+    let data = await PricesModel.find({}, { title: 1, from: 1, to: 1 })
     res.json(data)
   }
   catch (err) {
@@ -55,6 +55,37 @@ router.patch("/:index/:letter", authAdmin, async (req, res) => {
     res.status(502).json({ err })
   }
 })
+
+// router.patch("/:id/", async (req, res) => {
+//   try {
+//     let id = req.params.id
+//     let data = await PricesModel.updateOne(
+//       { _id: id },
+//       { $set: { "pricing.$": req.body } }
+//     );
+//     res.json(data);
+//   }
+//   catch (err) {
+//     console.log(err);
+//     res.status(502).json({ err })
+//   }
+// })
+
+// router.patch("/:id/", async (req, res) => {
+//   try {
+//     const id = req.params.id;
+//     const data = await PricesModel.findOneAndUpdate(
+//       { _id: id },
+//       { $push: { "comments.$": req.body } },
+//       { new: true }
+//     );
+//     res.json(data);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(502).json({ err });
+//   }
+// });
+
 
 
 module.exports = router;
