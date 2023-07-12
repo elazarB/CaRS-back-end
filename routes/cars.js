@@ -28,12 +28,12 @@ router.get("/", auth, async (req, res) => {
     }
     if (searchT !== "") {
       if (searchP !== "") {
-        if (searchP == "km" ||  searchP == "deductible") {
-          Number(searchT)
-          query["$or"] = [{ [searchP]: { $eq: searchT } }];
-        } else {
+        // if (searchP == "km" ||  searchP == "deductible") {
+        //   Number(searchT)
+        //   query["$or"] = [{ [searchP]: { $eq: searchT } }];
+        // } else {
           query["$or"] = [{ [searchP]: sExp }];
-        }
+        // }
       } else {
         // let num = Number(searchT) != NaN?Number(searchT):"";
         query["$or"] = [
@@ -49,9 +49,13 @@ router.get("/", auth, async (req, res) => {
           { class: sExp },
           { gearbox: sExp },
           { year: sExp },
-          { km: { $eq: Number(searchT) } },
-          { deductible: { $eq: Number(searchT) } }
         ];
+        if( Number(searchT)){
+          query["$or"] = [
+            { km: { $eq: Number(searchT) } },
+          { deductible: { $eq: Number(searchT) } }
+          ]
+        }
 
       }
     }
