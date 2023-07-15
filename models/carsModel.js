@@ -74,7 +74,7 @@ exports.validateCars = (_reqBody) => {
     images: Joi.array().min(0).max(100).allow(null, ""),
     files: Joi.array().min(0).max(100).allow(null, ""),
     last_test_date: Joi.date().min("1-1-2020").max("1-1-2100").allow(null, ""),
-    license_fee: Joi.number().min(2).max(2030).allow(null, ""),
+    license_fee: Joi.number().min(2).max(10000).allow(null, ""),
     fee_paid: Joi.boolean(),
     insurance_coverage: Joi.string().min(2).max(2030).allow(null, ""),
     date_policy_insurance: Joi.date().min("1-1-2020").max("1-1-2100").allow(null, ""),
